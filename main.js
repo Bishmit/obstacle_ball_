@@ -15,6 +15,7 @@ let gamespeed = 2;
 function animate(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     handleObstacles();
+    handleParticles();
     bird.update(); 
     ctx.fillStyle ='green';
     ctx.font = '90px Gergia';
