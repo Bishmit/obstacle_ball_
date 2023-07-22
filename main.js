@@ -1,44 +1,64 @@
-const resetButton = document.getElementById('btn'); 
+const resetButton = document.getElementById('reset'); 
+const hs = document.getElementById('highscore-value'); 
 const scr = document.querySelector(".score");
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 600;
 canvas.height = 400;
 
+let highscore = 0; 
 let spacePressed = false; 
 let angle = 0;
 let hue = 0; 
 let frame = 0; 
 let gamespeed = 2; 
-
+const isColliding = true; 
 
 function animate(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     handleObstacles();
-    handleParticles();
+    handleParticles(); 
     bird.update(); 
     ctx.fillStyle ='green';
     ctx.font = '90px Gergia';
-    scr.textContent = score;  
-    handleCollision(); 
-    if( handleCollision() == true){
-      return; 
+    scr.textContent = score;
+    storeHighscore(); 
+    showHighscore(); 
+    const isColliding = handleCollision();
+    if (isColliding) {
+      resetButton.style.display = "block"; 
+       return;      
     }
     requestAnimationFrame(animate);
     frame += 2; 
 }
 animate(); 
 
-
 window.addEventListener('keydown', (e)=>{      
-    if(e.code === 'Space') spacePressed = true;   
+  if(e.code === 'Space') spacePressed = true;   
 });
 
 
 
 window.addEventListener('keyup', (e)=>{ 
-    if(e.code === 'Space') spacePressed = false;   
+  if(e.code === 'Space') spacePressed = false;   
 });
+
+function storeHighscore(){
+localStorage.setItem('highScore', JSON.stringify(highscore));
+}
+
+function showHighscore(){
+  let currentHighscore = JSON.parse(localStorage.getItem('highScore'));
+  if(score>currentHighscore){
+    currentHighscore = score; 
+    hs.textContent = currentHighscore; 
+  }
+  else{
+    hs.textContent = currentHighscore; 
+  }
+  //console.log(currentHighscore); 
+}
 
 
 function handleCollision() {
@@ -56,18 +76,22 @@ function handleCollision() {
         topDistance <= bird.radius + obstaclesArray[i].width / 2 ||
         downDistance <= bird.radius + obstaclesArray[i].width / 2
       ) {
-        //console.log("Collision detected");
+        //console.log("Collision detected"); 
         ctx.font = "25px Gergia";
         ctx.fillStyle = "white";
-        ctx.fillText('Game over. Your score: ' + score , 200, 200);
-        bird.velocity = 0; 
-        bird.gravity = 0; 
+        ctx.fillText('Game over. Your score: ' + score , 170, 200);
         return true; 
       }    
     }
   }
 
-
+ resetButton.addEventListener("click", ()=>{
+  location.reload(); 
+})
+ addEventListener("keypress", (e)=>{
+  if(e.key == "Enter")
+  location.reload(); 
+})
   // collison detection 
 // function handlecollison() {
     
