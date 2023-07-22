@@ -31,7 +31,7 @@ function handleObstacles(){
         obstaclesArray[i].update(); 
         if (obstaclesArray[i].x + obstaclesArray[i].width < bird.x && !obstaclesArray[i].scored) {
             obstaclesArray[i].scored = true;
-            score++;
+            score++; highscore++; 
     }
     if(obstaclesArray.length > 20){
         obstaclesArray.pop(obstaclesArray[0]); 
