@@ -1,8 +1,10 @@
 const resetButton = document.getElementById('reset'); 
+const rhs = document.getElementById('reset-highscore'); 
 const hs = document.getElementById('highscore-value'); 
 const scr = document.querySelector(".score");
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
+const congrats = document.querySelector(".congo"); 
 canvas.width = 600;
 canvas.height = 400;
 
@@ -23,10 +25,9 @@ function animate(){
     ctx.font = '90px Gergia';
     scr.textContent = score;
     storeHighscore(); 
-    showHighscore(); 
     const isColliding = handleCollision();
     if (isColliding) {
-      resetButton.style.display = "block"; 
+      resetButton.style.display = "block";  
        return;      
     }
     requestAnimationFrame(animate);
@@ -44,20 +45,15 @@ window.addEventListener('keyup', (e)=>{
   if(e.code === 'Space') spacePressed = false;   
 });
 
-function storeHighscore(){
-localStorage.setItem('highScore', JSON.stringify(highscore));
-}
-
-function showHighscore(){
+function storeHighscore() {
+  // Retrieve the current high score from local storage
   let currentHighscore = JSON.parse(localStorage.getItem('highScore'));
-  if(score>currentHighscore){
-    currentHighscore = score; 
-    hs.textContent = currentHighscore; 
+  if (score > currentHighscore) {
+    currentHighscore = score;
+    localStorage.setItem('highScore', JSON.stringify(currentHighscore));
+    congrats.style.display = "block";
   }
-  else{
-    hs.textContent = currentHighscore; 
-  }
-  //console.log(currentHighscore); 
+  hs.textContent = currentHighscore;
 }
 
 
@@ -92,25 +88,12 @@ function handleCollision() {
   if(e.key == "Enter")
   location.reload(); 
 })
-  // collison detection 
-// function handlecollison() {
-    
-//     for(let i = 0; i<obstaclesArray.length; i++){
-//         var topdistX = Math.abs(bird.x - (obstaclesArray[i].x - obstaclesArray[i].width/2));
-//         var topdistY = Math.abs(bird.y - (0 - obstaclesArray[i].top)/2);
-         
-//         var downdistX = Math.abs(bird.x - (obstaclesArray[i].x - obstaclesArray[i].width/2));
-//         var downdistY = Math.abs(bird.y - ((canvas.height - obstaclesArray[i].bottom) - obstaclesArray[i].bottom/2)); 
-       
-//         if(topdistX <= obstaclesArray[i].width/2 || 
-//           topdistY <= obstaclesArray[i].top/2 ||
-//           downdistX <= obstaclesArray[i].width/2 ||
-//           downdistY <= obstaclesArray[i].bottom/2
-//         ){
-//             console.log("collison detected");
-//         }
-//     }
-//   }
-  
-  
-  
+
+function resetHighScore() {
+  highscore = 0;
+  localStorage.setItem('highScore', JSON.stringify(highscore));
+  hs.textContent = highscore;
+}
+rhs.addEventListener("click", ()=>{
+     resetHighScore(); 
+})
